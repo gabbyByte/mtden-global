@@ -32,6 +32,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true);
@@ -49,17 +50,17 @@ export default function Home() {
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6 relative animate-fadeIn">
-            <button 
+            <button
               onClick={() => setShowPaymentModal(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
             <div className="flex flex-col items-center">
-              <Image 
-                src="/mpesa-logo.png" 
-                width={150} 
-                height={80} 
+              <Image
+                src="/mpesa-logo.png"
+                width={150}
+                height={80}
                 alt="M-Pesa Logo"
                 className="mb-4"
               />
@@ -69,21 +70,21 @@ export default function Home() {
                   <span className="text-sm text-gray-500">Paybill Number</span>
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">247247</span>
-                    <button 
-                      onClick={() => {navigator.clipboard.writeText("247247")}}
+                    <button
+                      onClick={() => { navigator.clipboard.writeText("247247") }}
                       className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
                     >
                       Copy
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="flex flex-col p-3 border border-[#4CAF50]/30 rounded-lg bg-[#4CAF50]/5">
                   <span className="text-sm text-gray-500">Account Number</span>
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">0190180763452</span>
-                    <button 
-                      onClick={() => {navigator.clipboard.writeText("0190180763452")}}
+                    <button
+                      onClick={() => { navigator.clipboard.writeText("0190180763452") }}
                       className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
                     >
                       Copy
@@ -91,7 +92,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-6 space-y-2 w-full">
                 <p className="text-sm text-center text-gray-500">
                   After payment, please send your transaction details via WhatsApp for confirmation.
@@ -147,12 +148,19 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
+
           <div className="flex items-center gap-4">
             <Button asChild className="hidden md:flex bg-primary hover:bg-primary/90 btn-ripple">
               <Link href={openWhatsApp()} target="_blank" rel="noopener noreferrer">Get Started</Link>
             </Button>
 
-            <Button variant="outline" size="icon" className="md:hidden">
+            {/* Mobile Menu Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
               <span className="sr-only">Toggle menu</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -171,6 +179,115 @@ export default function Home() {
                 <line x1="4" x2="20" y1="18" y2="18" />
               </svg>
             </Button>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm md:hidden">
+                <div className="fixed inset-x-0 top-0 z-50 min-h-screen w-full border-b bg-background backdrop-blur-none animate-in slide-in-from-top-5">
+                  <div className="flex items-center justify-between px-4 py-4 bg-white">
+                    <Link href="/" className="flex items-center" onClick={() => setMobileMenuOpen(false)}>
+                      <Image
+                        src="/logo.jpeg"
+                        alt="MTDEN GLOBAL Logo"
+                        width={100}
+                        height={70}
+                        className="h-10 w-auto max-h-10 object-contain"
+                      />
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-6 w-6"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                      <span className="sr-only">Close menu</span>
+                    </Button>
+                  </div>
+                  <nav className="flex flex-col space-y-4 px-4 py-8 bg-white">
+                    <Link
+                      href="#services"
+                      className="text-lg font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Services
+                    </Link>
+                    <Link
+                      href="#why-us"
+                      className="text-lg font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Why Choose Us
+                    </Link>
+                    <Link
+                      href="#chauffeur"
+                      className="text-lg font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Chauffeur Services
+                    </Link>
+                    <Link
+                      href="#payment"
+                      className="text-lg font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Payment
+                    </Link>
+                    <Link
+                      href="#contact"
+                      className="text-lg font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Contact
+                    </Link>
+                    <div className="pt-4">
+                      <Button
+                        asChild
+                        className="w-full bg-primary hover:bg-primary/90"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Link href={openWhatsApp()} target="_blank" rel="noopener noreferrer">
+                          Get Started
+                        </Link>
+                      </Button>
+                    </div>
+                    <div className="pt-2">
+                      <Button
+                        variant="outline"
+                        className="w-full border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50]/10"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setShowPaymentModal(true);
+                        }}
+                      >
+                        <Image
+                          src="/mpesa-logo.png"
+                          width={20}
+                          height={20}
+                          alt="M-Pesa"
+                          className="mr-2"
+                        />
+                        Pay with M-Pesa
+                      </Button>
+                    </div>
+                  </nav>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </header>
@@ -221,7 +338,7 @@ export default function Home() {
 
         {/* M-Pesa Payment Banner - Attention-grabbing floating banner */}
         <div className="fixed bottom-6 right-6 z-40 max-w-sm animate-bounce-slow">
-          <button 
+          <button
             onClick={() => setShowPaymentModal(true)}
             className="flex items-center gap-3 bg-[#4CAF50] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#43A047] transition-all duration-300 group"
           >
@@ -468,10 +585,10 @@ export default function Home() {
                     <div className="flex-1 space-y-4 p-6 rounded-t-xl bg-[#4CAF50] text-white">
                       <div className="flex justify-between items-center">
                         <h3 className="text-2xl font-bold">Lipa Na M-Pesa</h3>
-                        <Image 
-                          src="/mpesa-logo.png" 
-                          width={80} 
-                          height={40} 
+                        <Image
+                          src="/mpesa-logo.png"
+                          width={80}
+                          height={40}
                           alt="M-Pesa Logo"
                           className="bg-white p-1 rounded-md"
                         />
@@ -519,7 +636,7 @@ export default function Home() {
                           <p className="text-sm">Enter amount and complete payment</p>
                         </div>
                       </div>
-                      <Button 
+                      <Button
                         onClick={() => setShowPaymentModal(true)}
                         className="w-full mt-6 bg-[#4CAF50] hover:bg-[#43A047] text-white"
                       >
@@ -544,7 +661,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="p-6 rounded-xl border bg-secondary/30 shadow-md">
                       <div className="space-y-4">
                         <h3 className="text-xl font-bold">Need Help with Payment?</h3>
@@ -565,7 +682,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="p-6 rounded-xl border bg-white shadow-md">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -581,7 +698,7 @@ export default function Home() {
                   </div>
                 </ScrollReveal>
               </div>
-              
+
               <ScrollReveal delay={600}>
                 <div className="mt-8 p-4 bg-[#4CAF50]/10 rounded-lg max-w-2xl mx-auto">
                   <p className="text-sm text-center text-muted-foreground">
@@ -691,7 +808,7 @@ export default function Home() {
                       <span className="text-xl font-bold text-primary-foreground">+254 799 707412</span>
                       <span className="text-primary-foreground/70 text-sm mt-1">Call or WhatsApp</span>
                     </div>
-                    
+
                     <div className="flex flex-col items-center p-6 rounded-lg bg-primary-foreground/10 backdrop-blur-sm">
                       <Mail className="h-8 w-8 text-primary-foreground mb-2" />
                       <span className="text-xl font-bold text-primary-foreground">mtdenglobal@gmail.com</span>
@@ -782,7 +899,7 @@ export default function Home() {
                 <ScrollReveal delay={300}>
                   <div className="flex items-center justify-center p-4 rounded-lg border hover:border-primary/30 transition-all">
                     <Image
-                                           src="/c3.png"
+                      src="/c3.png"
                       width={140}
                       height={80}
                       alt="Client logo 3"
@@ -801,7 +918,7 @@ export default function Home() {
                     />
                   </div>
                 </ScrollReveal>
-                
+
                 <ScrollReveal delay={500}>
                   <div className="flex items-center justify-center p-4 rounded-lg border hover:border-primary/30 transition-all">
                     <Image
@@ -994,7 +1111,7 @@ export default function Home() {
               <h3 className="text-base font-medium text-primary">Payment</h3>
               <ul className="space-y-2">
                 <li>
-                  <button 
+                  <button
                     onClick={() => setShowPaymentModal(true)}
                     className="text-sm text-muted-foreground hover:text-[#4CAF50] transition-colors group flex items-center"
                   >
@@ -1059,7 +1176,7 @@ export default function Home() {
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <svg
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
