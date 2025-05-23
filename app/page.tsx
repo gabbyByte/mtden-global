@@ -19,8 +19,10 @@ import {
   Mail,
   Wallet,
   CreditCard as PaymentIcon,
+  Copy,
 } from "lucide-react";
 
+import ChauffeurBookingForm from './book-chauffer';
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/animations/scroll-reveal";
 import Parallax from "@/components/animations/parallax";
@@ -33,6 +35,10 @@ export default function Home() {
   const statsRef = useRef<HTMLDivElement>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [copiedPaybill, setCopiedPaybill] = useState(false)
+  const [copiedAccount, setCopiedAccount] = useState(false)
+  const [chauffeurFormOpen, setChauffeurFormOpen] = useState(false);
+
 
   useEffect(() => {
     setMounted(true);
@@ -42,6 +48,18 @@ export default function Home() {
     return null;
   }
 
+  const copyToClipboard = (text: string,
+    setCopied:
+      React.Dispatch<React.SetStateAction<boolean>>) => {
+    navigator.clipboard.writeText(text).then
+      (() => {
+        setCopied(true);
+        setTimeout(() => {
+          setCopied(false)
+
+        }, 5000)
+      })
+  }
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollProgress />
@@ -71,10 +89,18 @@ export default function Home() {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">247247</span>
                     <button
-                      onClick={() => { navigator.clipboard.writeText("247247") }}
-                      className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
+                      onClick={() => copyToClipboard("247247", setCopiedPaybill)}
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
                     >
-                      Copy
+                      {copiedPaybill ? (
+                        <span className="flex items-center text-green-600">
+                          <CheckCircle className="h-3 w-3 mr-1" /> Copied!
+                        </span>
+                      ) : (
+                        <span className="flex items-center">
+                          <Copy className="h-3 w-3 mr-1" /> Copy
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -84,10 +110,18 @@ export default function Home() {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">0190180763452</span>
                     <button
-                      onClick={() => { navigator.clipboard.writeText("0190180763452") }}
-                      className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
+                      onClick={() => copyToClipboard("0190180763452", setCopiedAccount)}
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
                     >
-                      Copy
+                      {copiedAccount ? (
+                        <span className="flex items-center text-green-600">
+                          <CheckCircle className="h-3 w-3 mr-1" /> Copied!
+                        </span>
+                      ) : (
+                        <span className="flex items-center">
+                          <Copy className="h-3 w-3 mr-1" /> Copy
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -342,16 +376,16 @@ export default function Home() {
             onClick={() => setShowPaymentModal(true)}
             className="flex items-center gap-3 bg-[#4CAF50] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#43A047] transition-all duration-300 group"
           >
-            <div className="bg-white p-2 rounded-full">
-              {/* <Image 
+            {/* <div className="bg-white p-2 rounded-full">
+              <Image 
                 src="/mpesa-logo.png" 
                 width={24} 
                 height={24} 
                 alt="M-Pesa" 
                 className="min-w-[24px]"
-              /> */}
-            </div>
-            <span className="font-medium">Pay with M-Pesa</span>
+              />
+            </div> */}
+            <span className="font-medium">Pay</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
         </div>
@@ -774,12 +808,14 @@ export default function Home() {
                     ))}
                   </div>
                   <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                    <Button asChild className="bg-primary hover:bg-primary/90 btn-ripple group">
-                      <Link href={openWhatsApp("I'd like to book a chauffeur service.")} target="_blank" rel="noopener noreferrer">
-                        Book a Chauffeur
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </Link>
+                    <Button
+                      className="bg-primary hover:bg-primary/90 btn-ripple group"
+                      onClick={() => setChauffeurFormOpen(true)}
+                    >
+                      Book a Chauffeur
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </Button>
+
 
                   </div>
                 </div>
@@ -1211,6 +1247,12 @@ export default function Home() {
           animation: bounce-slow 3s infinite;
         }
       `}</style>
+
+      <ChauffeurBookingForm
+        isOpen={chauffeurFormOpen}
+        onClose={() => setChauffeurFormOpen(false)}
+      />
+
     </div>
   );
 }
