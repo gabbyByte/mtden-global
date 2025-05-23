@@ -17,6 +17,8 @@ import {
   CreditCard,
   Phone,
   Mail,
+  Wallet,
+  CreditCard as PaymentIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,7 @@ import { openWhatsApp } from './contact';
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -41,6 +44,68 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollProgress />
+
+      {/* Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 relative animate-fadeIn">
+            <button 
+              onClick={() => setShowPaymentModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div className="flex flex-col items-center">
+              <Image 
+                src="/mpesa-logo.png" 
+                width={150} 
+                height={80} 
+                alt="M-Pesa Logo"
+                className="mb-4"
+              />
+              <h3 className="text-xl font-bold mb-4">Lipa Na M-Pesa Details</h3>
+              <div className="space-y-4 w-full">
+                <div className="flex flex-col p-3 border border-[#4CAF50]/30 rounded-lg bg-[#4CAF50]/5">
+                  <span className="text-sm text-gray-500">Paybill Number</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold">247247</span>
+                    <button 
+                      onClick={() => {navigator.clipboard.writeText("247247")}}
+                      className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col p-3 border border-[#4CAF50]/30 rounded-lg bg-[#4CAF50]/5">
+                  <span className="text-sm text-gray-500">Account Number</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold">0190180763452</span>
+                    <button 
+                      onClick={() => {navigator.clipboard.writeText("0190180763452")}}
+                      className="text-[#4CAF50] text-sm hover:text-[#4CAF50]/80"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 space-y-2 w-full">
+                <p className="text-sm text-center text-gray-500">
+                  After payment, please send your transaction details via WhatsApp for confirmation.
+                </p>
+                <Button asChild className="w-full bg-[#4CAF50] hover:bg-[#4CAF50]/90">
+                  <Link href={openWhatsApp("Hello! I've made a payment via M-Pesa. Here are my transaction details:")} target="_blank" rel="noopener noreferrer">
+                    Confirm Payment via WhatsApp
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
@@ -71,6 +136,10 @@ export default function Home() {
             </Link>
             <Link href="#chauffeur" className="text-sm font-medium transition-colors hover:text-primary relative group">
               Chauffeur Services
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link href="#payment" className="text-sm font-medium transition-colors hover:text-primary relative group">
+              Payment
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link href="#contact" className="text-sm font-medium transition-colors hover:text-primary relative group">
@@ -149,6 +218,26 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* M-Pesa Payment Banner - Attention-grabbing floating banner */}
+        <div className="fixed bottom-6 right-6 z-40 max-w-sm animate-bounce-slow">
+          <button 
+            onClick={() => setShowPaymentModal(true)}
+            className="flex items-center gap-3 bg-[#4CAF50] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#43A047] transition-all duration-300 group"
+          >
+            <div className="bg-white p-2 rounded-full">
+              {/* <Image 
+                src="/mpesa-logo.png" 
+                width={24} 
+                height={24} 
+                alt="M-Pesa" 
+                className="min-w-[24px]"
+              /> */}
+            </div>
+            <span className="font-medium">Pay with M-Pesa</span>
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </button>
+        </div>
 
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white" id="about">
           <div className="container px-4 md:px-6">
@@ -359,6 +448,151 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Payment Section - Dedicated M-Pesa Section */}
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-[#4CAF50]/5" id="payment">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-8 text-center">
+              <ScrollReveal>
+                <div className="space-y-2">
+                  <div className="inline-block rounded-lg bg-[#4CAF50]/10 px-3 py-1 text-sm text-[#4CAF50] font-medium">Easy Payments</div>
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Simple & Secure Payment Options</h2>
+                  <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    We offer convenient payment methods to make your experience seamless.
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              <div className="grid gap-8 md:grid-cols-2 lg:gap-12 w-full max-w-4xl">
+                <ScrollReveal direction="left" delay={200}>
+                  <div className="flex flex-col h-full">
+                    <div className="flex-1 space-y-4 p-6 rounded-t-xl bg-[#4CAF50] text-white">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-2xl font-bold">Lipa Na M-Pesa</h3>
+                        <Image 
+                          src="/mpesa-logo.png" 
+                          width={80} 
+                          height={40} 
+                          alt="M-Pesa Logo"
+                          className="bg-white p-1 rounded-md"
+                        />
+                      </div>
+                      <p className="opacity-90">
+                        Quick, secure, and convenient mobile payments through Safaricom's M-Pesa service.
+                      </p>
+                    </div>
+                    <div className="bg-white p-6 rounded-b-xl border border-[#4CAF50]/30 shadow-md">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
+                            <span className="font-bold text-[#4CAF50]">1</span>
+                          </div>
+                          <p className="text-sm">Go to M-Pesa on your phone</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
+                            <span className="font-bold text-[#4CAF50]">2</span>
+                          </div>
+                          <p className="text-sm">Select "Lipa na M-Pesa" then "Paybill"</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
+                            <span className="font-bold text-[#4CAF50]">3</span>
+                          </div>
+                          <div>
+                            <p className="text-sm">Enter Business Number:</p>
+                            <p className="font-bold text-[#4CAF50]">247247</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
+                            <span className="font-bold text-[#4CAF50]">4</span>
+                          </div>
+                          <div>
+                            <p className="text-sm">Enter Account Number:</p>
+                            <p className="font-bold text-[#4CAF50]">0190180763452</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
+                            <span className="font-bold text-[#4CAF50]">5</span>
+                          </div>
+                          <p className="text-sm">Enter amount and complete payment</p>
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => setShowPaymentModal(true)}
+                        className="w-full mt-6 bg-[#4CAF50] hover:bg-[#43A047] text-white"
+                      >
+                        View Payment Details
+                      </Button>
+                    </div>
+                  </div>
+                </ScrollReveal>
+
+                <ScrollReveal direction="right" delay={400}>
+                  <div className="flex flex-col space-y-6">
+                    <div className="p-6 rounded-xl border bg-white shadow-md h-full">
+                      <div className="flex items-start gap-4">
+                        <div className="rounded-full bg-primary/10 p-3 text-primary">
+                          <CreditCard className="h-6 w-6" />
+                        </div>
+                        <div className="space-y-2">
+                          <h3 className="text-xl font-bold">Other Payment Methods</h3>
+                          <p className="text-muted-foreground">
+                            We also accept cash payments upon delivery and bank transfers for your convenience.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-6 rounded-xl border bg-secondary/30 shadow-md">
+                      <div className="space-y-4">
+                        <h3 className="text-xl font-bold">Need Help with Payment?</h3>
+                        <p className="text-muted-foreground">
+                          Our customer support team is available to assist you with any payment-related queries.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                          <Button asChild variant="outline" className="flex-1">
+                            <Link href={openWhatsApp("I need help with payment")} target="_blank" rel="noopener noreferrer">
+                              <Phone className="mr-2 h-4 w-4" /> Call Us
+                            </Link>
+                          </Button>
+                          <Button asChild className="flex-1 bg-primary hover:bg-primary/90">
+                            <Link href={`mailto:mtdenglobal@gmail.com?subject=Payment%20Assistance`}>
+                              <Mail className="mr-2 h-4 w-4" /> Email Us
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-6 rounded-xl border bg-white shadow-md">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-[#4CAF50]" />
+                          <span className="font-medium">Secure Payments</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-[#4CAF50]" />
+                          <span className="font-medium">Instant Confirmation</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              </div>
+              
+              <ScrollReveal delay={600}>
+                <div className="mt-8 p-4 bg-[#4CAF50]/10 rounded-lg max-w-2xl mx-auto">
+                  <p className="text-sm text-center text-muted-foreground">
+                    After making a payment, please send your transaction details via WhatsApp for confirmation and faster processing of your order.
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+
         <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary/30 parallax-container" id="chauffeur">
           <div className="parallax-bg" style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover', opacity: 0.05 }}></div>
           <div className="container px-4 md:px-6">
@@ -444,16 +678,25 @@ export default function Home() {
                 <div className="space-y-2">
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Ready to Get Started?</h2>
                   <p className="max-w-[600px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Contact us today via WhatsApp to discuss how MTDEN Global can simplify your life.
+                    Contact us today to discuss how MTDEN Global can simplify your life.
                   </p>
                 </div>
               </ScrollReveal>
 
               <ScrollReveal delay={300}>
                 <div className="mt-8 flex flex-col items-center">
-                  <div className="flex items-center justify-center gap-3 mb-6">
-                    <Phone className="h-8 w-8 text-primary-foreground" />
-                    <span className="text-2xl font-bold text-primary-foreground">+254 799 707412</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 w-full max-w-2xl">
+                    <div className="flex flex-col items-center p-6 rounded-lg bg-primary-foreground/10 backdrop-blur-sm">
+                      <Phone className="h-8 w-8 text-primary-foreground mb-2" />
+                      <span className="text-xl font-bold text-primary-foreground">+254 799 707412</span>
+                      <span className="text-primary-foreground/70 text-sm mt-1">Call or WhatsApp</span>
+                    </div>
+                    
+                    <div className="flex flex-col items-center p-6 rounded-lg bg-primary-foreground/10 backdrop-blur-sm">
+                      <Mail className="h-8 w-8 text-primary-foreground mb-2" />
+                      <span className="text-xl font-bold text-primary-foreground">mtdenglobal@gmail.com</span>
+                      <span className="text-primary-foreground/70 text-sm mt-1">Email Us Anytime</span>
+                    </div>
                   </div>
 
                   <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 btn-ripple text-lg px-8 py-6">
@@ -486,7 +729,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 group">
                     <Mail className="h-5 w-5 text-primary-foreground/70 group-hover:scale-110 transition-transform" />
-                    <span className="text-primary-foreground/90 group-hover:text-primary-foreground transition-colors">info@mtdenglobal.com</span>
+                    <span className="text-primary-foreground/90 group-hover:text-primary-foreground transition-colors">mtdenglobal@gmail.com</span>
                   </div>
                   <div className="flex items-center gap-2 group">
                     <MapPin className="h-5 w-5 text-primary-foreground/70 group-hover:scale-110 transition-transform" />
@@ -539,7 +782,7 @@ export default function Home() {
                 <ScrollReveal delay={300}>
                   <div className="flex items-center justify-center p-4 rounded-lg border hover:border-primary/30 transition-all">
                     <Image
-                      src="/c3.png"
+                                           src="/c3.png"
                       width={140}
                       height={80}
                       alt="Client logo 3"
@@ -673,31 +916,45 @@ export default function Home() {
               The leading provider of personalized shopping and errands solutions in Africa, simplifying everyday life
               through reliability, efficiency, and exceptional customer care.
             </p>
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <a href="mailto:mtdenglobal@gmail.com" className="text-sm hover:text-primary transition-colors">
+                  mtdenglobal@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-primary" />
+                <a href="tel:+254799707412" className="text-sm hover:text-primary transition-colors">
+                  +254 799 707412
+                </a>
+              </div>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:flex md:flex-wrap md:gap-12">
             <div className="space-y-3">
               <h3 className="text-base font-medium text-primary">Services</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     Collections
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     Parcel Delivery
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     E-commerce Fulfillment
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#chauffeur" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     Chauffeur Services
                   </Link>
@@ -708,56 +965,53 @@ export default function Home() {
               <h3 className="text-base font-medium text-primary">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#about" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#why-us" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Careers
+                    Why Choose Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href="#payment" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Blog
+                    Payment Options
                   </Link>
                 </li>
               </ul>
             </div>
             <div className="space-y-3">
-              <h3 className="text-base font-medium text-primary">Legal</h3>
+              <h3 className="text-base font-medium text-primary">Payment</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <button 
+                    onClick={() => setShowPaymentModal(true)}
+                    className="text-sm text-muted-foreground hover:text-[#4CAF50] transition-colors group flex items-center"
+                  >
+                    <span className="w-0 h-0.5 bg-[#4CAF50] mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
+                    M-Pesa Payment
+                  </button>
+                </li>
+                <li>
+                  <Link href="#payment" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Terms
+                    Payment Methods
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
+                  <Link href={openWhatsApp("I need help with payment")} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
                     <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
-                    <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Cookies
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors group flex items-center">
-                    <span className="w-0 h-0.5 bg-primary mr-0 group-hover:w-2 group-hover:mr-1 transition-all"></span>
-                    Licenses
+                    Payment Support
                   </Link>
                 </li>
               </ul>
@@ -805,7 +1059,7 @@ export default function Home() {
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <svg
+                                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -825,9 +1079,23 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Add CSS for the slow bounce animation */}
+      <style jsx global>{`
+        @keyframes bounce-slow {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 3s infinite;
+        }
+      `}</style>
     </div>
   );
 }
-
 
 
