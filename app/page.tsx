@@ -38,6 +38,22 @@ export default function Home() {
   const [copiedPaybill, setCopiedPaybill] = useState(false)
   const [copiedAccount, setCopiedAccount] = useState(false)
   const [chauffeurFormOpen, setChauffeurFormOpen] = useState(false);
+  const [showFloatingPay, setShowFloatingPay] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const paymentSection = document.getElementById('payment');
+      if (paymentSection) {
+        const rect = paymentSection.getBoundingClientRect();
+        // Show button when payment section is in view
+        setShowFloatingPay(rect.top <= window.innerHeight && rect.bottom >= 0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
 
   useEffect(() => {
@@ -61,7 +77,7 @@ export default function Home() {
       })
   }
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col overflow-hidden">
       <ScrollProgress />
 
       {/* Payment Modal */}
@@ -371,24 +387,19 @@ export default function Home() {
         </section>
 
         {/* M-Pesa Payment Banner - Attention-grabbing floating banner */}
-        <div className="fixed bottom-6 right-6 z-40 max-w-sm animate-bounce-slow">
-          <button
-            onClick={() => setShowPaymentModal(true)}
-            className="flex items-center gap-3 bg-[#4CAF50] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#43A047] transition-all duration-300 group"
-          >
-            {/* <div className="bg-white p-2 rounded-full">
-              <Image 
-                src="/mpesa-logo.png" 
-                width={24} 
-                height={24} 
-                alt="M-Pesa" 
-                className="min-w-[24px]"
-              />
-            </div> */}
-            <span className="font-medium">Pay</span>
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
-        </div>
+        {showFloatingPay && (
+          <div className="fixed bottom-20 right-2 z-40 animate-bounce-slow">
+            <button
+              onClick={() => setShowPaymentModal(true)}
+              className="flex items-center gap-2 bg-[#4CAF50] text-white px-3 py-2 rounded-full shadow-lg hover:bg-[#43A047] transition-all duration-300 group text-sm"
+            >
+              <span className="font-medium">Pay</span>
+              <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+          </div>
+        )}
+
+
 
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white" id="about">
           <div className="container px-4 md:px-6">
@@ -496,8 +507,8 @@ export default function Home() {
                   },
                   {
                     icon: <ShoppingBag className="h-6 w-6" />,
-                    title: "Grocery Shopping",
-                    description: "Fresh groceries delivered right to your doorstep.",
+                    title: "Sales and Stock Management",
+                    description: "Comprehensive inventory and sales support services.",
                     delay: 500
                   },
                   {
@@ -507,9 +518,9 @@ export default function Home() {
                     delay: 600
                   },
                   {
-                    icon: <Shirt className="h-6 w-6" />,
-                    title: "Dry-cleaning Services",
-                    description: "Look sharp without leaving home.",
+                    icon: <ShoppingBag className="h-6 w-6" />,
+                    title: "Custom Shopping",
+                    description: "Personalized shopping services tailored to your needs.",
                     delay: 700
                   },
                   {
@@ -534,6 +545,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* book a chauffer Section - Dedicated chauffer booking Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white" id="why-us">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
@@ -592,6 +604,85 @@ export default function Home() {
                       alt="Why Choose MTDEN Global"
                       className="relative rounded-lg object-cover shadow-lg"
                     />
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary/30 parallax-container" id="chauffeur">
+          <div className="parallax-bg" style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover', opacity: 0.05 }}></div>
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+              <ScrollReveal direction="left" delay={200}>
+                <div className="flex items-center justify-center">
+                  <div className="relative">
+                    <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 blur-lg animate-pulse"></div>
+                    <Image
+                      src="/r4.png"
+                      width={550}
+                      height={550}
+                      alt="MTDEN Global Chauffeur Services"
+                      className="relative rounded-lg object-cover shadow-lg"
+                    />
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="right">
+                <div className="flex flex-col justify-center space-y-4">
+                  <div className="space-y-2">
+                    <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Premium Transportation</div>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Professional Chauffeur Services</h2>
+                    <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                      At MTDEN GLOBAL, we offer professional chauffeur services designed for comfort, safety, and
+                      convenience.
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        title: "Airport Transfers",
+                        description: "Reliable and punctual airport pickup and drop-off services.",
+                        delay: 200
+                      },
+                      {
+                        title: "Business Meetings",
+                        description: "Make the right impression with our executive transportation services.",
+                        delay: 400
+                      },
+                      {
+                        title: "Special Events",
+                        description: "Arrive in style to weddings, galas, and other special occasions.",
+                        delay: 600
+                      },
+                      {
+                        title: "Personal Errands",
+                        description: "Let our experienced drivers handle your personal transportation needs.",
+                        delay: 800
+                      }
+                    ].map((service, index) => (
+                      <ScrollReveal key={index} delay={service.delay} direction="right">
+                        <div className="flex items-start gap-4 p-4 rounded-lg border bg-white hover:bg-secondary/50 transition-colors group">
+                          <Car className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+                          <div className="space-y-1">
+                            <h3 className="text-xl font-bold">{service.title}</h3>
+                            <p className="text-muted-foreground">{service.description}</p>
+                          </div>
+                        </div>
+                      </ScrollReveal>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                    <Button
+                      className="bg-primary hover:bg-primary/90 btn-ripple group"
+                      onClick={() => setChauffeurFormOpen(true)}
+                    >
+                      Book a Chauffeur
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Button>
+
+
                   </div>
                 </div>
               </ScrollReveal>
@@ -744,85 +835,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary/30 parallax-container" id="chauffeur">
-          <div className="parallax-bg" style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover', opacity: 0.05 }}></div>
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-              <ScrollReveal direction="left" delay={200}>
-                <div className="flex items-center justify-center">
-                  <div className="relative">
-                    <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 blur-lg animate-pulse"></div>
-                    <Image
-                      src="/r4.png"
-                      width={550}
-                      height={550}
-                      alt="MTDEN Global Chauffeur Services"
-                      className="relative rounded-lg object-cover shadow-lg"
-                    />
-                  </div>
-                </div>
-              </ScrollReveal>
 
-              <ScrollReveal direction="right">
-                <div className="flex flex-col justify-center space-y-4">
-                  <div className="space-y-2">
-                    <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Premium Transportation</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Professional Chauffeur Services</h2>
-                    <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                      At MTDEN GLOBAL, we offer professional chauffeur services designed for comfort, safety, and
-                      convenience.
-                    </p>
-                  </div>
-                  <div className="space-y-4">
-                    {[
-                      {
-                        title: "Airport Transfers",
-                        description: "Reliable and punctual airport pickup and drop-off services.",
-                        delay: 200
-                      },
-                      {
-                        title: "Business Meetings",
-                        description: "Make the right impression with our executive transportation services.",
-                        delay: 400
-                      },
-                      {
-                        title: "Special Events",
-                        description: "Arrive in style to weddings, galas, and other special occasions.",
-                        delay: 600
-                      },
-                      {
-                        title: "Personal Errands",
-                        description: "Let our experienced drivers handle your personal transportation needs.",
-                        delay: 800
-                      }
-                    ].map((service, index) => (
-                      <ScrollReveal key={index} delay={service.delay} direction="right">
-                        <div className="flex items-start gap-4 p-4 rounded-lg border bg-white hover:bg-secondary/50 transition-colors group">
-                          <Car className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
-                          <div className="space-y-1">
-                            <h3 className="text-xl font-bold">{service.title}</h3>
-                            <p className="text-muted-foreground">{service.description}</p>
-                          </div>
-                        </div>
-                      </ScrollReveal>
-                    ))}
-                  </div>
-                  <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                    <Button
-                      className="bg-primary hover:bg-primary/90 btn-ripple group"
-                      onClick={() => setChauffeurFormOpen(true)}
-                    >
-                      Book a Chauffeur
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Button>
-
-
-                  </div>
-                </div>
-              </ScrollReveal>
-            </div>
-          </div>
-        </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground parallax-container" id="contact">
           <div className="parallax-bg" style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover', opacity: 0.05 }}></div>
           <div className="container px-4 md:px-6">
