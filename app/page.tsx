@@ -409,7 +409,7 @@ export default function Home() {
                   <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Our Mission & Vision</div>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Who We Are</h2>
                   <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    To be the leading and most trusted provider of personalized shopping and errands solutions in Africa,
+                    We are among the leading and most trusted provider of personalized shopping and errands solutions in Kenya,
                     simplifying everyday life through reliability, efficiency, and exceptional customer care.
                   </p>
                 </div>
